@@ -13,6 +13,7 @@ private:
 	string os;
 	string* components;
 	int numberOfComponents;
+	char* code;
 
 public:
 
@@ -24,6 +25,22 @@ public:
 		this->numberOfComponents = 0;
 	}
 
+	Computer(const Computer &computer) :id(++numberOfComputers){
+		this->name = computer.name;
+		this->price = computer.price;
+		this->os = computer.os;
+		this->numberOfComponents = computer.numberOfComponents;
+		this->components = new string[this->numberOfComponents];
+		if (computer.components != nullptr) {
+			for (int i = 0; i < this->numberOfComponents; i++) {
+				this->components[i] = computer.components[i];
+			}
+		}
+		else {
+			this->components = nullptr;
+		}
+	}
+
 	Computer(string name, float price, string os, int numberOfComponents , string* components) :id(++numberOfComputers) {
 		this->name = name;
 		this->price = price;
@@ -33,8 +50,6 @@ public:
 		for (int i = 0; i < numberOfComponents; i++) {
 			this->components[i] = components[i];
 		}
-
-		delete[] components;
 	}
 
 	Computer(string name, float price, string os) :id(++numberOfComputers) {
@@ -52,16 +67,16 @@ public:
 	}
 
 	void viewComputer() {
+		cout << endl;
 		cout << " Id: " << this->id  << 
 		endl << " name: " << this->name << 
 		endl << " price: "  << this->price << 
-		endl <<  " os: " << this->os << this->os <<
+		endl <<  " os: " << this->os <<
 		endl << " Components: " << endl;
 
 		for (int i = 0; i < this->numberOfComponents; i++) {
 			cout << " Nr: "<< i <<" --> "<< this->components[i] << endl;
 		}
-
 		cout << endl;
 	}
 
@@ -115,7 +130,6 @@ public:
 		for (int i = 0; i < this->numberOfComponents; i++) {
 			this->components[i] = components[i];
 		}
-		delete[] components;
 	}
 
 	string* getComponents() {
@@ -128,14 +142,12 @@ int Computer::numberOfComputers = 0;
 
 
 int main() {
-	cout << "Hello World";
 
-	Computer c1;
-	c1= Computer("PC 1", 2500.0f, "Windows",6,new string[6] {"GPU","Motherboard","RAM","Hardrive","Case","Other"});
+	Computer c1("PC 1", 2500.0f, "Windows",6,new string[6] {"GPU","Motherboard","RAM","Hardrive","Case","Other"});
 	c1.viewComputer();
 
-	Computer c2;
-	c2 = Computer("PC 2", 3500.0f, "Windows");
+	 
+	Computer c2("PC 2", 3500.0f, "Windows");
 	c2.setComponents(new string[6]{ "GPU1","Motherboard1","RAM1","Hardrive1","Case1","Other1" },6);
 	c2.viewComputer();
 
@@ -145,6 +157,8 @@ int main() {
 		cout << endl << " Nr: " << i << " --> " << components[i];
 	}
 
-	delete[] components;
+	Computer c3 = c2;
+	c3.viewComputer();
+
 }
 
