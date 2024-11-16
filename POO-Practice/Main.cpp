@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include<iostream>
 #include<string>
 
@@ -23,6 +25,7 @@ public:
 		this->os = "undefined";
 		this->components = nullptr;
 		this->numberOfComponents = 0;
+		this->code = nullptr;
 	}
 
 	Computer(const Computer &computer) :id(++numberOfComputers){
@@ -31,6 +34,7 @@ public:
 		this->os = computer.os;
 		this->numberOfComponents = computer.numberOfComponents;
 		this->components = new string[this->numberOfComponents];
+
 		if (computer.components != nullptr) {
 			for (int i = 0; i < this->numberOfComponents; i++) {
 				this->components[i] = computer.components[i];
@@ -39,30 +43,58 @@ public:
 		else {
 			this->components = nullptr;
 		}
+
+		if (code != nullptr) {
+			this->code = new char[strlen(code) + 1];
+			strcpy(this->code, computer.code);
+		}
+		else {
+			this->code = nullptr;
+		}
 	}
 
-	Computer(string name, float price, string os, int numberOfComponents , string* components) :id(++numberOfComputers) {
+	Computer(string name, float price, string os, int numberOfComponents , string* components, const char* code) :id(++numberOfComputers) {
 		this->name = name;
 		this->price = price;
 		this->os = os;
 		this->numberOfComponents = numberOfComponents;
 		this->components = new string[numberOfComponents];
+
 		for (int i = 0; i < numberOfComponents; i++) {
 			this->components[i] = components[i];
 		}
+
+		if (code != nullptr) {
+			this->code = new char[strlen(code) + 1];
+			strcpy(this->code, code);
+		}
+		else {
+			this->code = nullptr;
+		}
 	}
 
-	Computer(string name, float price, string os) :id(++numberOfComputers) {
+	Computer(string name, float price, string os, const char* code) :id(++numberOfComputers) {
 		this->name = name;
 		this->price = price;
 		this->os = os;
 		this->components = nullptr;
 		this->numberOfComponents = 0;
+
+		if (code != nullptr) {
+			this->code = new char[strlen(code) + 1];
+			strcpy(this->code, code);
+		}
+		else {
+			this->code = nullptr;
+		}
 	}
 
 	~Computer() {
 		if (this->components != nullptr) {
 			delete [] components;
+		}
+		if (this->code != nullptr) {
+			delete[] code;
 		}
 	}
 
@@ -80,7 +112,7 @@ public:
 		cout << endl;
 	}
 
-	string setName(string name) {
+	void setName(string name) {
 	  this->name = name;
 	}
 
@@ -90,7 +122,7 @@ public:
 		}
 	}
 
-	int setPrice(float price) {
+	void setPrice(float price) {
 		if (price > 0) {
 			this->price = price;
 		}
@@ -100,7 +132,7 @@ public:
 		return this->price;
 	}
 
-	string setOs(string os) {
+	void setOs(string os) {
 		if (name != "") {
 			this->os = os;
 		}
@@ -140,14 +172,84 @@ public:
 
 int Computer::numberOfComputers = 0;
 
+class Laptop : public Computer {
+private:
+	string* componenteLaptop;
+	int nrComponenteLaptop;
+	float greutate;
+	int capacitateBaterie;
+
+public:
+	void setNrCompLaptop(int nrComponenteLaptop) {
+		this->nrComponenteLaptop = nrComponenteLaptop;
+	}
+
+	int getNrCompLaptop() {
+		return this->nrComponenteLaptop;
+	}
+
+	void setGreutate(float greutate) {
+		this->greutate = greutate;
+	}
+
+	float getNrGreuatate() {
+		return this->greutate;
+	}
+
+	void setCapacitateBaterie(int capacitateBaterie) {
+		this->capacitateBaterie = capacitateBaterie;
+	}
+
+	int getCapacitateBaterie() {
+		return this->capacitateBaterie;
+	}
+
+	void setComponenteLaptop(string* componenteLaptop, int nrComponenteLaptop) {
+
+		setNrCompLaptop(nrComponenteLaptop);
+
+		this->componenteLaptop = new string[this->nrComponenteLaptop];
+
+		for (int i = 0; i < this->nrComponenteLaptop; i++) {
+			this->componenteLaptop[i] = componenteLaptop[i];
+		}
+	}
+
+	void viewLaptop() {
+		cout << endl;
+		cout << " Capacitate Baterie: " << this->capacitateBaterie <<
+			endl << " greutate: " << this->greutate <<
+			endl << " Components: " << endl;
+
+		for (int i = 0; i < this->nrComponenteLaptop; i++) {
+			cout << " Nr: " << i << " --> " << this->componenteLaptop[i] << endl;
+		}
+		cout << endl;
+	}
+
+	string* getComponenteLaptop() {
+		return this->componenteLaptop;
+	};
+
+	Laptop(string name, float price, string os, int numberOfComponents, string* components, const char* code , int nrComponenteLaptop,  string* componenteLaptop,  float greutate, int capacitateBaterie ) : Computer(name, price, os, numberOfComponents, components, code) {
+		this->capacitateBaterie = capacitateBaterie;
+		this->nrComponenteLaptop = nrComponenteLaptop;
+		this->greutate = greutate;
+		this->componenteLaptop = new string[this->nrComponenteLaptop];
+
+		for (int i = 0; i < this->nrComponenteLaptop; i++) {
+			this->componenteLaptop[i] = componenteLaptop[i];
+		}
+	}
+};
 
 int main() {
 
-	Computer c1("PC 1", 2500.0f, "Windows",6,new string[6] {"GPU","Motherboard","RAM","Hardrive","Case","Other"});
+	Computer c1("PC 1", 2500.0f, "Windows",6,new string[6] {"GPU","Motherboard","RAM","Hardrive","Case","Other"},"PC2024");
 	c1.viewComputer();
 
 	 
-	Computer c2("PC 2", 3500.0f, "Windows");
+	Computer c2("PC 2", 3500.0f, "Windows","PC2024");
 	c2.setComponents(new string[6]{ "GPU1","Motherboard1","RAM1","Hardrive1","Case1","Other1" },6);
 	c2.viewComputer();
 
@@ -159,6 +261,10 @@ int main() {
 
 	Computer c3 = c2;
 	c3.viewComputer();
+
+	Laptop l1("PC 1", 2500.0f, "Windows", 6, new string[6]{ "GPU","Motherboard","RAM","Hardrive","Case","Other" }, "PC2024",3, new string[3]{"Camera","Touchpad","microfon"},1000.5f,5000);
+	l1.viewComputer();
+	l1.viewLaptop();
 
 }
 
