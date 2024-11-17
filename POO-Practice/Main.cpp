@@ -116,6 +116,12 @@ public:
 	  this->name = name;
 	}
 
+	int getId() {
+		if (id != 0) {
+			return this->id;
+		}
+	}
+
 	string getName() {
 		if (name != "") {
 			return this->name;
@@ -170,7 +176,6 @@ public:
 
 };
 
-int Computer::numberOfComputers = 0;
 
 class Laptop : public Computer {
 private:
@@ -180,6 +185,13 @@ private:
 	int capacitateBaterie;
 
 public:
+	Laptop() : Computer() {
+		greutate = 0.0f;
+		capacitateBaterie = 0;
+		componenteLaptop = nullptr;
+		nrComponenteLaptop = 0;
+	}
+
 	void setNrCompLaptop(int nrComponenteLaptop) {
 		this->nrComponenteLaptop = nrComponenteLaptop;
 	}
@@ -204,9 +216,14 @@ public:
 		return this->capacitateBaterie;
 	}
 
-	void setComponenteLaptop(string* componenteLaptop, int nrComponenteLaptop) {
+	friend Laptop operator+(float valoare, Laptop laptop);
 
+	void setComponenteLaptop(string* componenteLaptop, int nrComponenteLaptop) {
 		setNrCompLaptop(nrComponenteLaptop);
+
+		if (this->componenteLaptop != nullptr) {
+			delete[] this->componenteLaptop;
+		}
 
 		this->componenteLaptop = new string[this->nrComponenteLaptop];
 
@@ -229,9 +246,9 @@ public:
 
 	string* getComponenteLaptop() {
 		return this->componenteLaptop;
-	};
+	}
 
-	Laptop(string name, float price, string os, int numberOfComponents, string* components, const char* code , int nrComponenteLaptop,  string* componenteLaptop,  float greutate, int capacitateBaterie ) : Computer(name, price, os, numberOfComponents, components, code) {
+	Laptop(string name, float price, string os, int numberOfComponents, string* components, const char* code, int nrComponenteLaptop, string* componenteLaptop, float greutate, int capacitateBaterie) : Computer(name, price, os, numberOfComponents, components, code) {
 		this->capacitateBaterie = capacitateBaterie;
 		this->nrComponenteLaptop = nrComponenteLaptop;
 		this->greutate = greutate;
@@ -241,7 +258,58 @@ public:
 			this->componenteLaptop[i] = componenteLaptop[i];
 		}
 	}
+
+	Laptop(const Laptop &laptop) : Computer(laptop) {
+		this->capacitateBaterie = laptop.capacitateBaterie;
+		this->nrComponenteLaptop = laptop.nrComponenteLaptop;
+		this->greutate = laptop.greutate;
+		this->componenteLaptop = new string[this->nrComponenteLaptop];
+
+		if (laptop.componenteLaptop != nullptr) {
+			for (int i = 0; i < this->nrComponenteLaptop; i++) {
+				this->componenteLaptop[i] = laptop.componenteLaptop[i];
+			}
+		}
+		else {
+			this->componenteLaptop = nullptr;
+		}
+	}
+	~Laptop() {
+		if (this->componenteLaptop != nullptr) {
+			delete[] this->componenteLaptop;
+		}
+	}
+
+	Laptop operator+(float value) {
+		Laptop aux = *this;
+		aux.greutate += value;
+		return aux;
+	}
 };
+
+Laptop operator+(float valoare, Laptop laptop) {
+	Laptop aux = laptop;
+	aux.greutate += valoare;
+	return aux;
+}
+
+int Computer::numberOfComputers = 0;
+
+ostream& operator<<(ostream& oStream, Computer &computer) {
+		oStream << endl;
+		oStream << " Id: " << computer.getId() <<
+		endl << " name: " << computer.getName() <<
+		endl << " price: " << computer.getPrice() <<
+		endl << " os: " << computer.getOs() <<
+		endl << " Components: " << endl;
+
+	for (int i = 0; i < computer.getNrComp(); i++) {
+		cout << " Nr: " << i << " --> " << computer.getComponents()[i] << endl;
+	}
+	cout << endl;
+
+	return oStream;
+}
 
 int main() {
 
@@ -260,11 +328,15 @@ int main() {
 	}
 
 	Computer c3 = c2;
-	c3.viewComputer();
+	cout << c3;
 
 	Laptop l1("PC 1", 2500.0f, "Windows", 6, new string[6]{ "GPU","Motherboard","RAM","Hardrive","Case","Other" }, "PC2024",3, new string[3]{"Camera","Touchpad","microfon"},1000.5f,5000);
 	l1.viewComputer();
 	l1.viewLaptop();
+	
+	Laptop l2 = l1 + 2000.0f;
+	l2.viewLaptop();
+
 
 }
 
