@@ -174,6 +174,18 @@ public:
 		return this->components;	
 	}
 
+	string operator[](int index) {
+		if (index >= 0) {
+			return this->components[index];
+		}
+	}
+
+	float operator+(float valoare) {
+		this->price += valoare;
+		return this->price;
+	}
+
+
 };
 
 
@@ -285,6 +297,7 @@ public:
 		aux.greutate += value;
 		return aux;
 	}
+
 };
 
 Laptop operator+(float valoare, Laptop laptop) {
@@ -309,6 +322,43 @@ ostream& operator<<(ostream& oStream, Computer &computer) {
 	cout << endl;
 
 	return oStream;
+}
+
+istream &operator>> (istream &Istream, Computer &computer) {
+		cout << endl;
+		cout << " Id: " << computer.getId();
+
+		string name;
+		cout << endl << " name: ";
+		Istream >> name;
+		computer.setName(name);
+
+		float price;
+		cout << endl << " price: ";
+		Istream >> price;
+		computer.setPrice(price);
+
+		string os;
+		cout << endl << " os: ";
+		Istream >> os;
+		computer.setOs(os);
+
+		int nrComponente;
+		cout << endl << " nrComponente: ";
+		Istream >> nrComponente;
+		computer.setNrComp(nrComponente);
+
+		string* tempComputerComp = new string[nrComponente];
+
+	for (int i = 0; i < computer.getNrComp(); i++) {
+		cout << endl << " Nr: " << i << " --> ";
+		Istream >> tempComputerComp[i];
+	}
+
+	computer.setComponents(tempComputerComp, nrComponente);
+	cout << endl;
+
+	return Istream;
 }
 
 int main() {
@@ -337,6 +387,14 @@ int main() {
 	Laptop l2 = l1 + 2000.0f;
 	l2.viewLaptop();
 
+	Computer c4;
+	//cin >> c4;
+	//c4.viewComputer();
 
+	cout << "Components:" << endl;
+	for (int i = 0; i < c3.getNrComp(); i++) {
+		cout<< "Componenta " << i <<": " << c3[i]<<endl;
+	}
+	
 }
 
