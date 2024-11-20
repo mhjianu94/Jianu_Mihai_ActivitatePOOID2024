@@ -5,67 +5,79 @@
 
 using namespace std;
 
-class Tren {
+class Masina {
 private:
-	static int nrTrenuri;
-	int idTren;
-	int capacitate;
-	int nrPasageri;
-	char* operatorTren;
+	char* nrInmatriculare;
+	static int nrMasini;
+	const int numarOrdineMasina;
+	int locuri;
+	const int roti;
+	float combustibil;
+	const int capacitateRezervor;
+
 public:
-	Tren():idTren(++nrTrenuri) {
-		this->capacitate = 1000;
-		this->nrPasageri = 0;
-		this->operatorTren = new char[8];
-		strcpy(this->operatorTren, "Default");
+
+	Masina() :numarOrdineMasina(++nrMasini), roti(4), capacitateRezervor(40){
+		this->combustibil = 10.2;
+		this->locuri = 5;
+		this->nrInmatriculare = new char[8];
+		strcpy(this->nrInmatriculare, "0000000");
 	}
 
-	Tren(int capacitate,int nrPasageri,const char* operatorTren) :idTren(++nrTrenuri) {
-		this->capacitate = capacitate;
-		this->nrPasageri = nrPasageri;
-		this->operatorTren = new char[strlen(operatorTren)+1];
-		strcpy(this->operatorTren, operatorTren);
+	Masina(float combustibil, int locuri , const char* nrInmatriculare) :numarOrdineMasina(++nrMasini), roti(4), capacitateRezervor(40) {
+		this->combustibil = 10.2;
+		this->locuri = 5;
+		this->nrInmatriculare = new char[strlen(nrInmatriculare)+1];
+		strcpy(this->nrInmatriculare, nrInmatriculare);
 	}
 
-	~Tren() {
-		if (this->operatorTren != nullptr) {
-			delete[] operatorTren;
+	~Masina() {
+		if (this->nrInmatriculare != nullptr) {
+			delete[] this->nrInmatriculare;
 		}
 	}
 
-	int getId() {
-		return this->idTren;
-	}
-	int getCapacitate() {
-		return this->capacitate;
-	}
-	int getNrPasageri() {
-		return this->nrPasageri;
-	}
-	char* getOperator() {
-		return this->operatorTren;
+	void setCombustibil(float combustibil) {
+		this->combustibil = combustibil;
 	}
 
+	float getCombustibil() {
+		return this->combustibil;
+	}
+
+	void afisareMasina() {
+		cout  << endl;
+		cout << "numarOrdineMasina: " << this->numarOrdineMasina << endl;
+		cout << "nrInmatriculare: " << this->nrInmatriculare << endl;
+		cout << "capacitateRezervor: " << this->capacitateRezervor << endl;
+		cout << "combustibil: " << this->combustibil << endl;
+		cout << "roti: " << this->roti << endl;
+		cout << "locuri: " << this->locuri << endl;
+	}
+
+	friend istream& operator>>(istream& stream, Masina& masina) {
+		float valoare;
+		cin >> valoare;
+		masina.setCombustibil(valoare + masina.getCombustibil());
+		return stream;
+	};
 
 };
 
-ostream& operator<<(ostream& stream, Tren &tren) {
-	cout << endl << 
-		tren.getId() << ";" 
-		<< tren.getCapacitate() << ";"
-		<< tren.getNrPasageri() << ";"
-		<<  tren.getOperator() << ";";
-
-	return stream;
-}
-
-int Tren::nrTrenuri = 0;
+int Masina::nrMasini = 0;
 
 int main() {
-	Tren t1 = Tren();
-	cout << t1<<endl;
 
-	Tren t2 = Tren(3500,1000,"CFR");
-	cout << t2 << endl;;
-	return 0;
+	Masina masina1 = Masina();
+	masina1.afisareMasina();
+
+	Masina masina2 = Masina(15.3f, 6,"CT27JMH");
+	masina2.afisareMasina();
+
+	cin >> masina2;
+
+	masina2.afisareMasina();
+
+
+	return 1;
 }
