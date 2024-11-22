@@ -62,6 +62,13 @@ public:
 		return stream;
 	};
 
+
+	Masina operator+ (float value) {
+		Masina masina = *this;
+		masina.combustibil += value;
+		return masina;
+	}
+
 };
 
 int Masina::nrMasini = 0;
@@ -73,7 +80,7 @@ int main() {
 
 	Masina masina2 = Masina(15.3f, 6,"CT27JMH");
 	masina2.afisareMasina();
-
+	masina2 = masina2 + 1.3f;
 	cin >> masina2;
 
 	masina2.afisareMasina();
