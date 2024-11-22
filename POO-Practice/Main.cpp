@@ -31,6 +31,13 @@ public:
 		strcpy(this->nrInmatriculare, nrInmatriculare);
 	}
 
+	   Masina(const Masina& masina) : numarOrdineMasina(++nrMasini), roti(4), capacitateRezervor(40) {
+        this->locuri = masina.locuri;
+        this->combustibil = masina.combustibil;
+        this->nrInmatriculare = new char[strlen(masina.nrInmatriculare) + 1];
+        strcpy(this->nrInmatriculare, masina.nrInmatriculare);
+    }
+
 	~Masina() {
 		if (this->nrInmatriculare != nullptr) {
 			delete[] this->nrInmatriculare;
@@ -69,7 +76,12 @@ public:
 		return masina;
 	}
 
+	char operator[](int index) {
+		return this->nrInmatriculare[index];
+	}
 };
+
+
 
 int Masina::nrMasini = 0;
 
@@ -80,11 +92,11 @@ int main() {
 
 	Masina masina2 = Masina(15.3f, 6,"CT27JMH");
 	masina2.afisareMasina();
-	masina2 = masina2 + 1.3f;
-	cin >> masina2;
-
+	//cin >> masina2;
 	masina2.afisareMasina();
 
-
-	return 1;
+	Masina masina3 = masina2 + 1.3f;
+	masina3.afisareMasina();
+	cout << "Caracter: " << masina3[1];
+	return 0;
 }
